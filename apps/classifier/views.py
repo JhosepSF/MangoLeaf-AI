@@ -251,6 +251,8 @@ def result_detail_view(request, record_id):
     return render(request, 'classifier/result.html', {
         'record': record,
         'category_info': category_info,
+        'chart_labels': chart_labels,
+        'chart_data': chart_data,
         'chart_labels_json': json.dumps(chart_labels),
         'chart_data_json': json.dumps(chart_data),
         'detailed_probabilities': detailed_probabilities,
