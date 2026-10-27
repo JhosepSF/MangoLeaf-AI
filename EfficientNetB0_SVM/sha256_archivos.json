@@ -1,0 +1,18 @@
+{
+  "README_DJANGO.txt": "d043c414064e88de427c4771a0986187839b5fc0fe5c7a473a18280eea4cc5bd",
+  "artefactos/__pycache__/inferencia.cpython-313.pyc": "1b74117c82bf855273500163d0a3cd6ac68f5d6225026a50a013db59dca7b29e",
+  "artefactos/classes_experimento_original.json": "30683d42a9b49a106ee8d94e42fd338c20f55c789fa5ae16dd34ad4fcfc590a7",
+  "artefactos/config.json": "882528e32f45ab92f971156ce30fdfb0ee7645f972397bcaf50bd128516034ae",
+  "artefactos/config_experimento_original.json": "40da311089be8f58173c6d90d4ddbd61af1b2f157fa406b9c4c86a6e86f2c0b3",
+  "artefactos/dependencias_originales.json": "ed13eb0706bb461419e773fb8062572e6e225fa7407c3a06826f96c3a5c90e74",
+  "artefactos/extractor.keras": "6041239631cd9c072488448dbdc355ac1676875a86c3610ef6dbd53cea304311",
+  "artefactos/inferencia.py": "e6531367eceb205397c5896ccdb4a99deb95673ed2cf6707a99e51245ac56a42",
+  "artefactos/svm_pipeline.joblib": "5f0f3f7037801965f06fbde9dfe766de7284322cfb122cd7dd3ccca2522d2b75",
+  "artefactos/versiones_entorno.json": "9a573cad475648f9d48eb7ef92ff325801b39cdd512e27f6359abf8c441a1b6d",
+  "fotos_test/manifest_test.json": "ac41f963f5407d895decda09d4e8130099af164afda7aa88e9acffad111810dd",
+  "fotos_test/prueba_01.jpg": "c06629ea3c4232605efcd21a1fea339f9a9a61de7945541e14633d7619efcf72",
+  "fotos_test/prueba_02.jpg": "54c878ddbc47d3b189be8e1629a946b6cf842be36a80865d308002bd90f2ad25",
+  "prueba_inferencia.csv": "f39dcf31d3a2531cd9181718fc4216ab7b0c92899c932c95dc717aad168b337a",
+  "ranking_cv_f1.csv": "62e3348f66fa3a63c6991e451e990e96f82189de0bde365e3ca4a5e5b8a0cffd",
+  "seleccion_compilado_original.json": "73ae01456bac70868e4a34ed6ed4027dd6244a1c66eb3bc565daf0e2f9e81821"
+}

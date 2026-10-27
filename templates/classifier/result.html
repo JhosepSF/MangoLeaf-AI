@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resultado del Análisis #{{ record.id }} &bull; {{ record.predicted_class_es }} | MangoLeaf-AI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Cabecera de resultados -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <a href="{% url 'classifier:analyze' %}" class="text-muted text-decoration-none small">
+          <i class="fa-solid fa-arrow-left me-1"></i> Clasificador
+        </a>
+        <span class="text-muted">&bull;</span>
+        <span class="badge bg-light text-muted border">ID #{{ record.id }}</span>
+        <span class="badge bg-light text-muted border">{{ record.created_at|date:"d/m/Y H:i" }}</span>
+      </div>
+      <h1 class="fw-bold text-dark mb-0">Informe de Clasificación Fitosanitaria</h1>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <a href="{% url 'classifier:download_pdf' record_id=record.id %}" class="btn btn-outline-dark" id="btn-download-pdf">
+        <i class="fa-solid fa-file-pdf me-2 text-danger"></i> Descargar Reporte PDF
+      </a>
+      <a href="{% url 'classifier:analyze' %}" class="btn btn-emerald" id="btn-analyze-another">
+        <i class="fa-solid fa-plus me-1"></i> Analizar otra hoja
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <!-- Columna izquierda: Imagen y Diagnóstico Principal -->
+    <div class="col-lg-5">
+      <!-- Tarjeta de Diagnóstico Principal -->
+      <div class="custom-card mb-4 text-center p-4">
+        <div class="mb-3">
+          {% if record.is_healthy %}
+            <span class="badge-status healthy fs-6 px-4 py-2">
+              <i class="fa-solid fa-circle-check"></i> ESTADO: HOJA SANA
+            </span>
+          {% else %}
+            <span class="badge-status danger fs-6 px-4 py-2">
+              <i class="fa-solid fa-triangle-exclamation"></i> PATOLOGÍA DETECTADA
+            </span>
+          {% endif %}
+        </div>
+
+        <h2 class="fw-bold text-dark mb-1">{{ record.predicted_class_es }}</h2>
+        <div class="text-muted fst-italic mb-3">
+          {{ record.predicted_class }} &bull; Clase #{{ record.predicted_id }}
+        </div>
+
+        <!-- Métrica de Certeza -->
+        <div class="p-3 rounded mb-3" style="background: var(--bg-card-alt); border: 1px solid var(--border-subtle);">
+          <div class="text-muted small mb-1">PUNTUACIÓN DE CONFIANZA ESTIMADA</div>
+          <div class="confidence-meter-number {% if record.is_healthy %}text-success{% else %}text-danger{% endif %}">
+            {{ record.confidence_pct|floatformat:2 }}%
+          </div>
+          <div class="text-muted" style="font-size: 0.76rem;">
+            Vector de soporte SVM &bull; Tiempo de inferencia: <b>{{ record.inference_time_ms }} ms</b>
+          </div>
+        </div>
+
+        <!-- Fotografía analizada -->
+        <div class="border rounded p-2 bg-white shadow-sm mb-2 position-relative overflow-hidden">
+          {% if record.image %}
+            <img src="{{ record.image.url }}" alt="Hoja analizada" class="img-fluid rounded" style="max-height: 280px; width: 100%; object-fit: contain;">
+          {% else %}
+            <div class="py-5 text-muted small">Sin imagen asociada</div>
+          {% endif %}
+        </div>
+        <div class="small text-muted text-truncate" title="{{ record.original_filename }}">
+          Archivo: {{ record.original_filename }}
+        </div>
+      </div>
+
+      <!-- Ficha de la patología y recomendaciones -->
+      <div class="custom-card p-4">
+        <h5 class="fw-bold text-dark mb-3">
+          <i class="fa-solid fa-stethoscope text-success me-2"></i> Ficha Fitopatológica
+        </h5>
+
+        <div class="mb-3">
+          <span class="text-muted small d-block">AGENTE CAUSAL / PATÓGENO</span>
+          <span class="fw-semibold text-dark">{{ category_info.agente|default:"No especificado" }}</span>
+        </div>
+
+        <div class="mb-3">
+          <span class="text-muted small d-block">SEVERIDAD TÍPICA EN CAMPO</span>
+          <span class="badge {% if record.is_healthy %}bg-success{% elif category_info.gravedad == 'Alta' or category_info.gravedad == 'Muy Alta' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+            {{ category_info.gravedad|default:"Media" }}
+          </span>
+        </div>
+
+        <div class="mb-3">
+          <span class="text-muted small d-block">DESCRIPCIÓN DE LA ENFERMEDAD</span>
+          <p class="small text-muted mb-0" style="line-height: 1.5;">
+            {{ category_info.descripcion|default:"Sin descripción disponible." }}
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <span class="text-muted small d-block">SINTOMATOLOGÍA VISIBLE</span>
+          <p class="small text-muted mb-0" style="line-height: 1.5;">
+            {{ category_info.sintomas|default:"Sin registro." }}
+          </p>
+        </div>
+
+        <div class="pt-2 border-top">
+          <span class="text-muted small d-block mb-2">RECOMENDACIONES AGRONÓMICAS</span>
+          <ul class="small text-muted ps-3 mb-0" style="line-height: 1.6;">
+            {% for rec in category_info.recomendaciones %}
+              <li>{{ rec }}</li>
+            {% empty %}
+              <li>Consultar con un técnico fitosanitario calificado.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha: Gráficos de Probabilidades y Ranking Completo -->
+    <div class="col-lg-7">
+      <!-- Gráfico interactivo de barras -->
+      <div class="custom-card mb-4 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div>
+            <h5 class="fw-bold text-dark mb-1">
+              <i class="fa-solid fa-chart-column text-success me-2"></i> Distribución de Puntuaciones
+            </h5>
+            <p class="text-muted small mb-0">Puntuaciones estimadas para las 8 categorías del clasificador.</p>
+          </div>
+          <span class="badge bg-light text-muted border">SVM predict_proba</span>
+        </div>
+
+        <div style="position: relative; height: 320px; width: 100%;">
+          <canvas id="probabilitiesChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Tabla detallada de puntuaciones -->
+      <div class="custom-card p-4">
+        <h5 class="fw-bold text-dark mb-3">
+          <i class="fa-solid fa-table-list text-success me-2"></i> Detalle por Categoría
+        </h5>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th style="width: 40px;">#</th>
+                <th>Categoría (Español)</th>
+                <th>Clase Técnica</th>
+                <th class="text-end">Puntuación</th>
+                <th class="text-end">Porcentaje</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in ranked_probabilities %}
+                <tr class="{% if item.is_winner %}winner-row{% endif %}">
+                  <td class="font-monospace text-muted">{{ forloop.counter }}</td>
+                  <td>
+                    <div class="fw-bold text-dark">
+                      {% if item.is_winner %}
+                        <i class="fa-solid fa-circle-check text-success me-1"></i>
+                      {% endif %}
+                      {{ item.class_es }}
+                    </div>
+                  </td>
+                  <td class="text-muted font-monospace small">{{ item.class_en }}</td>
+                  <td class="text-end font-monospace text-muted small">{{ item.probability|floatformat:6 }}</td>
+                  <td class="text-end font-monospace fw-bold {% if item.is_winner %}text-success{% else %}text-dark{% endif %}">
+                    {{ item.percentage|floatformat:2 }}%
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Advertencia Académica Oficial -->
+      <div class="disclaimer-box">
+        <i class="fa-solid fa-triangle-exclamation fs-4 text-warning"></i>
+        <div>
+          <b>Aviso Académico:</b> Este resultado es una clasificación automatizada de carácter orientativo y académico. No sustituye la evaluación fitosanitaria de un especialista colegiado. Las puntuaciones de SVM no deben interpretarse como probabilidades clínicamente calibradas.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('probabilitiesChart');
+    if (!ctx) return;
+
+    const labels = {{ chart_labels_json|safe }};
+    const dataValues = {{ chart_data_json|safe }};
+    const winnerClass = "{{ record.predicted_class_es }}";
+
+    // Paleta de colores: verde esmeralda para el ganador, pizarra suave para los demás
+    const backgroundColors = labels.map(label => {
+      return (label === winnerClass) ? '#059669' : '#cbd5e1';
+    });
+
+    const borderColors = labels.map(label => {
+      return (label === winnerClass) ? '#047857' : '#94a3b8';
+    });
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Puntuación estimada (%)',
+          data: dataValues,
+          backgroundColor: backgroundColors,
+          borderColor: borderColors,
+          borderWidth: 1.5,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return ` ${context.parsed.y.toFixed(2)}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: function (val) { return val + '%'; },
+              font: { family: "'JetBrains Mono', monospace" }
+            },
+            grid: { color: '#f1f5f9' }
+          },
+          x: {
+            ticks: {
+              maxRotation: 45,
+              minRotation: 25,
+              font: { size: 11 }
+            },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

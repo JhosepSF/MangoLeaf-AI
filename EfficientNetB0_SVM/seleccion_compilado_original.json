@@ -1,0 +1,21 @@
+{
+  "seed": 42,
+  "dataset": "Mango Leaf Disease",
+  "modelos": {
+    "ResNet50 + SVM": "ResNet50_SVM",
+    "EfficientNet-B0 + SVM": "EfficientNetB0_SVM",
+    "MobileNetV2 + SVM": "MobileNetV2_SVM"
+  },
+  "n_train": 1488,
+  "n_test": 212,
+  "criterio_preseleccion": "media F1-macro por fold CV",
+  "preseleccionado": "EfficientNet-B0 + SVM",
+  "friedman_exploratorio": {
+    "chi2": 3.200000000000003,
+    "gl": 2,
+    "p": 0.2018965179946551,
+    "kendall_w": 0.16000000000000014
+  },
+  "nota": "Friedman por folds solo exploratorio. Test no usado para elegir. Sin post-hoc ni XAI.",
+  "scikit_learn": "1.6.1"
+}

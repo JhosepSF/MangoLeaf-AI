@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Clasificador de Hojas de Mango | MangoLeaf-AI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="text-center max-w-700 mx-auto mb-4">
+    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill fw-semibold mb-2">
+      Módulo de Inferencia en Tiempo Real
+    </span>
+    <h1 class="fw-bold text-dark">Clasificador de Hojas de Mango</h1>
+    <p class="text-muted">
+      Cargue o arrastre una fotografía foliar para que el modelo híbrido <b>EfficientNet-B0 + SVM</b> clasifique automáticamente su estado fitosanitario.
+    </p>
+  </div>
+
+  {% if not engine_status.is_ready %}
+    <!-- Alerta en caso de que los artefactos no estén disponibles -->
+    <div class="alert alert-warning border border-warning shadow-sm p-4 text-center mb-5" role="alert">
+      <i class="fa-solid fa-triangle-exclamation fs-1 text-warning mb-3"></i>
+      <h4 class="alert-heading fw-bold">Modelo no configurado</h4>
+      <p class="mb-2">
+        Los artefactos del modelo híbrido no se encuentran disponibles o no pudieron inicializarse.
+      </p>
+      <div class="small text-muted font-monospace bg-light p-2 rounded d-inline-block">
+        {{ engine_status.error|default:"Faltan archivos extractor.keras o svm_pipeline.joblib" }}
+      </div>
+      <p class="small text-muted mt-3 mb-0">
+        Por favor verifique que la carpeta <code>EfficientNetB0_SVM/artefactos/</code> contenga <code>config.json</code>, <code>extractor.keras</code> y <code>svm_pipeline.joblib</code>.
+      </p>
+    </div>
+  {% endif %}
+
+  <div class="row justify-content-center g-4">
+    <div class="col-lg-8">
+      <!-- Tarjeta principal de carga -->
+      <div class="custom-card position-relative p-4 p-md-5">
+        <!-- Overlay animado durante la inferencia -->
+        <div id="processing-overlay" class="processing-overlay">
+          <div class="pulse-spinner"></div>
+          <h5 class="fw-bold text-dark mb-1">Analizando imagen foliar</h5>
+          <p id="processing-status" class="text-muted small text-center mb-0">
+            Preprocesando imagen (EXIF, RGB y redimensionamiento 224x224)...
+          </p>
+        </div>
+
+        <form id="analyze-form" method="POST" enctype="multipart/form-data" action="{% url 'classifier:analyze' %}">
+          {% csrf_token %}
+
+          <!-- Zona Drag and Drop -->
+          <div id="dropzone" class="dropzone-container mb-4">
+            <input type="file" name="image" id="image-input" class="d-none" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+
+            <!-- Prompt inicial -->
+            <div id="dropzone-prompt">
+              <div class="dropzone-icon">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <h5 class="fw-bold text-dark mb-1">Arrastre su fotografía aquí</h5>
+              <p class="text-muted small mb-2">o haga clic para explorar archivos en su dispositivo</p>
+              <div class="d-flex justify-content-center gap-2">
+                <span class="badge bg-light text-muted border">JPG, JPEG o PNG</span>
+                <span class="badge bg-light text-muted border">Máximo 10 MB</span>
+                <span class="badge bg-light text-muted border">224 &times; 224 px optimizado</span>
+              </div>
+            </div>
+
+            <!-- Previsualización de la imagen -->
+            <div id="preview-container" class="preview-container">
+              <div class="preview-img-wrapper">
+                <img id="preview-image" src="" alt="Vista previa de la hoja de mango">
+                <button type="button" id="btn-remove-preview" class="btn-remove-preview" title="Quitar imagen">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+              <p class="text-success small fw-semibold mb-0">
+                <i class="fa-solid fa-circle-check me-1"></i> Imagen lista para análisis
+              </p>
+            </div>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" id="btn-submit-analyze" class="btn btn-emerald btn-lg py-3 fw-bold" {% if not engine_status.is_ready %}disabled{% endif %}>
+              <i class="fa-solid fa-microscope me-2"></i> Analizar Hoja con EfficientNet-B0 + SVM
+            </button>
+          </div>
+        </form>
+
+        <div class="disclaimer-box mt-4">
+          <i class="fa-solid fa-shield-halved fs-5 text-warning"></i>
+          <div>
+            <b>Aviso de confidencialidad y rigor:</b> Las fotografías se procesan exclusivamente para la extracción de características y generación del informe. No se comparten con servicios de terceros.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra lateral con muestras de control y consejos de fotografía -->
+    <div class="col-lg-4">
+      <!-- Muestras de prueba oficiales de la tesis -->
+      <div class="custom-card mb-4 p-4">
+        <h5 class="fw-bold text-dark mb-2">
+          <i class="fa-solid fa-flask-vial text-success me-2"></i> Muestras de Control Oficiales
+        </h5>
+        <p class="text-muted small mb-3">
+          Pruebe la inferencia inmediata con imágenes oficiales reservadas del conjunto Test de la investigación:
+        </p>
+
+        <div class="d-flex flex-column gap-2">
+          <a href="{% url 'classifier:analyze_demo' demo_name='prueba_01.jpg' %}" class="demo-card-item">
+            <div class="brand-icon-box" style="width: 44px; height: 44px; font-size: 1.1rem; background: #fee2e2; border-color: #fecaca; color: #dc2626;">
+              <i class="fa-solid fa-virus"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark small">Muestra 01 &bull; Antracnosis</div>
+              <div class="text-muted" style="font-size: 0.72rem;">prueba_01.jpg (Anthracnose)</div>
+            </div>
+            <i class="fa-solid fa-chevron-right ms-auto text-muted small"></i>
+          </a>
+
+          <a href="{% url 'classifier:analyze_demo' demo_name='prueba_02.jpg' %}" class="demo-card-item">
+            <div class="brand-icon-box" style="width: 44px; height: 44px; font-size: 1.1rem; background: #fef3c7; border-color: #fde68a; color: #d97706;">
+              <i class="fa-solid fa-bacteria"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark small">Muestra 02 &bull; Oídio</div>
+              <div class="text-muted" style="font-size: 0.72rem;">prueba_02.jpg (Powdery Mildew)</div>
+            </div>
+            <i class="fa-solid fa-chevron-right ms-auto text-muted small"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Consejos de captura para mejores resultados -->
+      <div class="custom-card p-4">
+        <h5 class="fw-bold text-dark mb-3">
+          <i class="fa-solid fa-lightbulb text-warning me-2"></i> Consejos de Fotografía
+        </h5>
+        <ul class="text-muted small ps-3 mb-0" style="line-height: 1.7;">
+          <li><b>Iluminación difusa:</b> Fotografíe con luz natural evitando reflejos intensos directos.</li>
+          <li><b>Enfoque nítido:</b> Asegúrese de enfocar la lámina foliar y las posibles manchas o síntomas.</li>
+          <li><b>Fondo neutro:</b> De preferencia coloque la hoja sobre una superficie clara y homogénea.</li>
+          <li><b>Hoja completa o sector afectado:</b> La lesión debe ocupar al menos el 40% del encuadre.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

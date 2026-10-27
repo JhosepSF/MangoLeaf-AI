@@ -1,0 +1,530 @@
+/* ==========================================================================
+   MangoLeaf-AI — Design System & Custom Styles
+   Paleta: Verde Esmeralda, Verde Bosque Oscuro, Neutros Cálidos, Tipografía Inter
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Colores Principales */
+  --primary-emerald: #059669;
+  --primary-emerald-hover: #047857;
+  --primary-emerald-light: #ecfdf5;
+  --primary-emerald-glow: rgba(5, 150, 105, 0.15);
+
+  /* Acentos Oscuros */
+  --forest-dark: #064e3b;
+  --forest-deep: #022c22;
+  --nav-bg: #064e3b;
+
+  /* Neutros */
+  --bg-body: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f1f5f9;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-light: #94a3b8;
+  --border-subtle: #e2e8f0;
+  --border-focus: #10b981;
+
+  /* Estados Fitosanitarios */
+  --status-healthy: #059669;
+  --status-healthy-bg: #d1fae5;
+  --status-danger: #dc2626;
+  --status-danger-bg: #fee2e2;
+  --status-warning: #d97706;
+  --status-warning-bg: #fef3c7;
+
+  /* Tipografías */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Elevaciones */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px -2px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 12px 32px -4px rgba(15, 23, 42, 0.08);
+  --shadow-emerald: 0 8px 24px -4px rgba(5, 150, 105, 0.25);
+
+  /* Radios */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Barra de Navegación Profesional
+   ========================================================================== */
+.custom-navbar {
+  background: linear-gradient(135deg, var(--forest-deep) 0%, var(--forest-dark) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.85rem 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: #ffffff !important;
+  letter-spacing: -0.02em;
+}
+
+.brand-icon-box {
+  width: 38px;
+  height: 38px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #34d399;
+  font-size: 1.15rem;
+}
+
+.brand-badge {
+  font-size: 0.65rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #a7f3d0;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+.nav-link {
+  color: #cbd5e1 !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.9rem !important;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-btn-analyze {
+  background: var(--primary-emerald);
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 1.1rem !important;
+  box-shadow: var(--shadow-emerald);
+  transition: all 0.2s ease;
+}
+
+.nav-btn-analyze:hover {
+  background: var(--primary-emerald-hover);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Tarjetas y Contenedores Sencillos y No Genéricos
+   ========================================================================== */
+.custom-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 1.75rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-card:hover {
+  border-color: #cbd5e1;
+}
+
+.card-header-clean {
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title-clean {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--forest-dark);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ==========================================================================
+   Hero Section Moderno y Académico
+   ========================================================================== */
+.hero-wrapper {
+  background: radial-gradient(circle at 10% 20%, rgba(5, 150, 105, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(6, 78, 59, 0.05) 0%, transparent 40%),
+              #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 3.5rem 0 3rem;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary-emerald-light);
+  border: 1px solid #a7f3d0;
+  color: var(--forest-dark);
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.hero-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: var(--forest-deep);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+}
+
+.hero-title .highlight {
+  color: var(--primary-emerald);
+  position: relative;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+/* ==========================================================================
+   Área de Carga de Imagen (Drag & Drop Zone)
+   ========================================================================== */
+.dropzone-container {
+  border: 2px dashed #94a3b8;
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dropzone-container:hover, .dropzone-container.drag-over {
+  border-color: var(--primary-emerald);
+  background: var(--primary-emerald-light);
+}
+
+.dropzone-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: var(--primary-emerald);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease;
+}
+
+.dropzone-container:hover .dropzone-icon {
+  transform: scale(1.08);
+}
+
+.preview-container {
+  display: none;
+  text-align: center;
+}
+
+.preview-img-wrapper {
+  position: relative;
+  max-width: 320px;
+  margin: 0 auto 1.25rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--primary-emerald);
+}
+
+.preview-img-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.btn-remove-preview {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(15, 23, 42, 0.75);
+  color: #ffffff;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-remove-preview:hover {
+  background: #dc2626;
+}
+
+/* Indicador de procesamiento / Spinner con pasos */
+.processing-overlay {
+  display: none;
+  background: rgba(255, 255, 255, 0.95);
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 10;
+  border-radius: var(--radius-md);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.pulse-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--border-subtle);
+  border-top-color: var(--primary-emerald);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Tarjetas de Muestras Oficiales (Quick Demo)
+   ========================================================================== */
+.demo-card-item {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.demo-card-item:hover {
+  border-color: var(--primary-emerald);
+  background: var(--primary-emerald-light);
+  transform: translateY(-2px);
+  color: inherit;
+}
+
+.demo-thumbnail {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 1px solid var(--border-subtle);
+}
+
+/* ==========================================================================
+   Badges y Resultados
+   ========================================================================== */
+.badge-status {
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.badge-status.healthy {
+  background: var(--status-healthy-bg);
+  color: var(--status-healthy);
+  border: 1px solid #a7f3d0;
+}
+
+.badge-status.danger {
+  background: var(--status-danger-bg);
+  color: var(--status-danger);
+  border: 1px solid #fecaca;
+}
+
+.badge-status.warning {
+  background: var(--status-warning-bg);
+  color: var(--status-warning);
+  border: 1px solid #fde68a;
+}
+
+/* Puntuación de confianza */
+.confidence-meter-number {
+  font-family: var(--font-mono);
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--forest-deep);
+  line-height: 1;
+}
+
+/* ==========================================================================
+   Tablas Estilizadas
+   ========================================================================== */
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.custom-table th {
+  background: var(--bg-card-alt);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.custom-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.92rem;
+  vertical-align: middle;
+}
+
+.custom-table tr:last-child td {
+  border-bottom: none;
+}
+
+.custom-table tr:hover td {
+  background: #f8fafc;
+}
+
+.winner-row td {
+  background: #ecfdf5 !important;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Botones Principales
+   ========================================================================== */
+.btn-emerald {
+  background: var(--primary-emerald);
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  padding: 0.65rem 1.4rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-emerald:hover {
+  background: var(--primary-emerald-hover);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-emerald);
+}
+
+.btn-outline-emerald {
+  border: 1.5px solid var(--primary-emerald);
+  color: var(--primary-emerald);
+  background: transparent;
+  font-weight: 600;
+  padding: 0.6rem 1.3rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-outline-emerald:hover {
+  background: var(--primary-emerald);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   Disclaimer Académico Box
+   ========================================================================== */
+.disclaimer-box {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.85rem 1.15rem;
+  font-size: 0.85rem;
+  color: #78350f;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   Footer Institucional
+   ========================================================================== */
+.custom-footer {
+  background: var(--forest-deep);
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2.5rem 0 1.5rem;
+  margin-top: auto;
+  font-size: 0.9rem;
+}
+
+.footer-title {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 0.85rem;
+}
+
+.footer-link {
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.footer-link:hover {
+  color: #34d399;
+}

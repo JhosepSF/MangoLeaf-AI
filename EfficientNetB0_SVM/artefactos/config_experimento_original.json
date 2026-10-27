@@ -1,0 +1,53 @@
+{
+  "project": "Tesis_CamilaVargas",
+  "architecture": "EfficientNet-B0 + SVM",
+  "classes": [
+    "Anthracnose",
+    "Bacterial Canker",
+    "Cutting Weevil",
+    "Die Back",
+    "Gall Midge",
+    "Healthy",
+    "Powdery Mildew",
+    "Sooty Mould"
+  ],
+  "label_mapping": {
+    "Anthracnose": 0,
+    "Bacterial Canker": 1,
+    "Cutting Weevil": 2,
+    "Die Back": 3,
+    "Gall Midge": 4,
+    "Healthy": 5,
+    "Powdery Mildew": 6,
+    "Sooty Mould": 7
+  },
+  "image_size": [
+    224,
+    224
+  ],
+  "image_color": "RGB",
+  "orientation": "ImageOps.exif_transpose",
+  "resize": "PIL.Image.Resampling.BILINEAR",
+  "preprocessing": "tensorflow.keras.applications.efficientnet.preprocess_input (identidad; EfficientNetB0 incluye normalización interna)",
+  "embedding_dim": 1280,
+  "svm_params": {
+    "kernel": "linear",
+    "C": 45.70563099801453,
+    "class_weight": null
+  },
+  "fit": {
+    "ft_internal_train": 170,
+    "ft_internal_validation": 43,
+    "svm_train": 1488,
+    "svm_ft_added": 213,
+    "hpo_only_for_selection": 213
+  },
+  "test_touched": true,
+  "seed": 42,
+  "tensorflow": "2.21.0",
+  "sklearn": "1.6.1",
+  "artifacts": {
+    "extractor": "extractor_efficientnetb0_ft.keras",
+    "classifier": "svm_pipeline_final.joblib"
+  }
+}

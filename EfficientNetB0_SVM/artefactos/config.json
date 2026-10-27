@@ -1,0 +1,40 @@
+{
+  "winner": "EfficientNet-B0 + SVM",
+  "slug": "EfficientNetB0_SVM",
+  "extractor_file": "extractor.keras",
+  "classifier_file": "svm_pipeline.joblib",
+  "feature_dim": 1280,
+  "preprocess": "efficientnetb0",
+  "image_size": [
+    224,
+    224
+  ],
+  "input_mode": "RGB",
+  "input_range": "float32_0_255",
+  "exif": "ImageOps.exif_transpose",
+  "resize": "PIL.Image.Resampling.BILINEAR",
+  "classes": [
+    "Anthracnose",
+    "Bacterial Canker",
+    "Cutting Weevil",
+    "Die Back",
+    "Gall Midge",
+    "Healthy",
+    "Powdery Mildew",
+    "Sooty Mould"
+  ],
+  "labels_es": [
+    "Antracnosis",
+    "Cancro bacteriano",
+    "Gorgojo del corte",
+    "Muerte regresiva",
+    "Mosquito de la agalla",
+    "Hoja sana",
+    "Oídio",
+    "Fumagina"
+  ],
+  "selection_rule": "Mayor F1-macro medio de CV-10 (Test excluido)",
+  "cv_f1_mean": 0.9818157476433416,
+  "created_utc": "2026-10-27T00:26:32.272671+00:00",
+  "disclaimer": "Clasificación académica orientativa; no constituye diagnóstico fitosanitario confirmado."
+}

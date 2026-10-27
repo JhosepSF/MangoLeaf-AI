@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Arquitectura del Modelo Híbrido | MangoLeaf-AI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-5">
+    <div class="d-flex align-items-center gap-2 mb-2">
+      <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill fw-semibold">
+        Metodología Experimental
+      </span>
+      <span class="badge bg-light text-muted border">CV-10 Estratificado</span>
+    </div>
+    <h1 class="fw-bold text-dark mb-2">Modelo Híbrido: EfficientNet-B0 + SVM</h1>
+    <p class="lead text-muted max-w-800">
+      Documentación técnica del enfoque de visión computacional seleccionado en la investigación para la detección de enfermedades foliares del mango.
+    </p>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <!-- Explicación de la arquitectura híbrida -->
+    <div class="col-lg-7">
+      <div class="custom-card h-100 p-4">
+        <h4 class="fw-bold text-dark mb-3">
+          <i class="fa-solid fa-diagram-project text-success me-2"></i> Pipeline de Inferencia
+        </h4>
+        <p class="text-muted">
+          A diferencia de los enfoques convencionales de extremo a extremo que utilizan capas densas con Softmax para la clasificación, la presente investigación adopta una <b>arquitectura híbrida</b> en dos etapas complementarias:
+        </p>
+
+        <div class="p-3 mb-3 bg-light rounded border">
+          <div class="d-flex align-items-start gap-3 mb-3">
+            <span class="badge bg-dark rounded-circle p-2 px-3 fw-bold">1</span>
+            <div>
+              <div class="fw-bold text-dark">Preprocesamiento y Estandarización</div>
+              <div class="text-muted small">
+                La fotografía se transpone según metadatos EXIF, se convierte al espacio de color RGB y se redimensiona a <b>224 &times; 224 píxeles</b> mediante interpolación bilineal.
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-start gap-3 mb-3">
+            <span class="badge bg-success rounded-circle p-2 px-3 fw-bold">2</span>
+            <div>
+              <div class="fw-bold text-dark">Extracción Profunda (EfficientNet-B0)</div>
+              <div class="text-muted small">
+                La red convolucional preentrenada actúa como extractor de representaciones de alto nivel, proyectando la imagen a un vector denso de <b>1,280 dimensiones</b> (Global Average Pooling).
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-start gap-3">
+            <span class="badge bg-primary rounded-circle p-2 px-3 fw-bold">3</span>
+            <div>
+              <div class="fw-bold text-dark">Clasificación de Margen Máximo (SVM Pipeline)</div>
+              <div class="text-muted small">
+                El vector de 1,280 características es normalizado con <b>StandardScaler</b> y procesado por un clasificador de vectores de soporte (SVC) entrenado, obteniendo las puntuaciones de pertenencia para las 8 categorías mediante <b>predict_proba()</b>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-muted small mb-0">
+          <b>Ventaja técnica:</b> El clasificador SVM aprovecha la potencia discriminativa de los hiperplanos de margen óptimo sobre espacios de características de alta dimensionalidad, reduciendo el sobreajuste habitual en datasets agrícolas con clases desbalanceadas o sutilezas morfológicas.
+        </p>
+      </div>
+    </div>
+
+    <!-- Tabla comparativa de resultados reales -->
+    <div class="col-lg-5">
+      <div class="custom-card h-100 p-4">
+        <h4 class="fw-bold text-dark mb-3">
+          <i class="fa-solid fa-trophy text-warning me-2"></i> Ranking de Modelos (CV-10)
+        </h4>
+        <p class="text-muted small mb-3">
+          Resultados reales de validación cruzada estratificada sobre el conjunto de entrenamiento (1,488 muestras). El conjunto de Test (212 muestras) fue excluido de la selección para evitar sesgo metodológico.
+        </p>
+
+        <div class="table-responsive mb-3">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Modelo Híbrido</th>
+                <th class="text-end">F1-Macro Medio</th>
+                <th class="text-center">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in ranking_data %}
+                <tr class="{% if item.es_ganador %}winner-row{% endif %}">
+                  <td>
+                    <div class="fw-semibold text-dark">{{ item.modelo }}</div>
+                    {% if item.es_ganador %}
+                      <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.68rem;">Modelo Ganador</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end font-monospace fw-bold text-dark">
+                    {{ item.pct }}%
+                  </td>
+                  <td class="text-center">
+                    {% if item.es_ganador %}
+                      <span class="badge bg-success"><i class="fa-solid fa-check"></i> Seleccionado</span>
+                    {% else %}
+                      <span class="badge bg-secondary opacity-75">Evaluado</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-3 bg-light rounded border small text-muted">
+          <div class="fw-semibold text-dark mb-1"><i class="fa-solid fa-flask me-1 text-primary"></i> Análisis Estadístico Exploratorio:</div>
+          <div>Prueba de Friedman: &chi;&sup2; = 3.20 (p = 0.2018, Kendall's W = 0.160).</div>
+          <div class="mt-1 fst-italic" style="font-size: 0.76rem;">Nota: Test no fue empleado para seleccionar el modelo; conservando la validez experimental.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalle de las 8 categorías -->
+  <div class="custom-card p-4 mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <div>
+        <h4 class="fw-bold text-dark mb-1">
+          <i class="fa-solid fa-seedling text-success me-2"></i> Catálogo de las 8 Categorías Fitosanitarias
+        </h4>
+        <p class="text-muted small mb-0">Respetando estrictamente el orden de salida del clasificador entrenado.</p>
+      </div>
+      <a href="{% url 'classifier:analyze' %}" class="btn btn-emerald btn-sm">
+        <i class="fa-solid fa-microscope me-1"></i> Probar Clasificador
+      </a>
+    </div>
+
+    <div class="row g-3">
+      {% for class_en, data in categories_list %}
+        <div class="col-md-6 col-lg-3">
+          <div class="p-3 border rounded bg-white h-100 d-flex flex-column justify-content-between shadow-sm">
+            <div>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge bg-light text-muted border font-monospace">Clase #{{ forloop.counter0 }}</span>
+                <span class="badge {% if class_en == 'Healthy' %}bg-success{% elif data.gravedad == 'Alta' or data.gravedad == 'Muy Alta' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                  {{ data.gravedad }}
+                </span>
+              </div>
+              <h6 class="fw-bold text-dark mb-1">{{ data.nombre_es }}</h6>
+              <div class="text-muted small mb-2 fst-italic">{{ class_en }}</div>
+              <div class="small text-secondary mb-2" style="font-size: 0.78rem;">
+                <b>Agente:</b> {{ data.agente }}
+              </div>
+              <p class="text-muted small" style="font-size: 0.8rem; line-height: 1.4;">
+                {{ data.descripcion|truncatewords:18 }}
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Disclaimer oficial -->
+  <div class="disclaimer-box">
+    <i class="fa-solid fa-triangle-exclamation fs-4 text-warning"></i>
+    <div>
+      <b>Aviso Académico y Metodológico:</b> Esta herramienta es producto de un proyecto de investigación universitario. Las predicciones del clasificador EfficientNet-B0 + SVM son de carácter orientativo. Siempre se aconseja corroborar con inspecciones de campo efectuadas por ingenieros agrónomos fitosanitarios.
+    </div>
+  </div>
+</div>
+{% endblock %}

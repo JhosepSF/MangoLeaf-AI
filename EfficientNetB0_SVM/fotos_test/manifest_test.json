@@ -1,0 +1,14 @@
+[
+  {
+    "archivo": "prueba_01.jpg",
+    "clase_real": "Anthracnose",
+    "original": "/content/drive/MyDrive/Tesis_CamilaVargas/Mango_Leaf/Anthracnose/IMG_20211011_161707 (Custom).jpg",
+    "sha256": "c06629ea3c4232605efcd21a1fea339f9a9a61de7945541e14633d7619efcf72"
+  },
+  {
+    "archivo": "prueba_02.jpg",
+    "clase_real": "Powdery Mildew",
+    "original": "/content/drive/MyDrive/Tesis_CamilaVargas/Mango_Leaf/Powdery Mildew/IMG256 (6).JPG",
+    "sha256": "54c878ddbc47d3b189be8e1629a946b6cf842be36a80865d308002bd90f2ad25"
+  }
+]

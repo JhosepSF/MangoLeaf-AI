@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inicio | MangoLeaf-AI &bull; Clasificación Inteligente de Enfermedades Foliares{% endblock %}
+
+{% block content %}
+<!-- Sección Hero -->
+<section class="hero-wrapper">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <div class="hero-pill">
+          <i class="fa-solid fa-microchip text-emerald"></i>
+          <span>Modelo Híbrido: EfficientNet-B0 + SVM</span>
+          <span class="badge bg-success ms-1">F1-Macro: 98.18%</span>
+        </div>
+
+        <h1 class="hero-title">
+          Diagnóstico inteligente para la <span class="highlight">salud foliar</span> del mango.
+        </h1>
+
+        <p class="hero-subtitle">
+          Sistema automatizado de visión computacional y aprendizaje profundo diseñado para identificar oportunamente 8 categorías fitosanitarias en el cultivo de mango a partir de fotografías foliares.
+        </p>
+
+        <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
+          <a href="{% url 'classifier:analyze' %}" class="btn btn-emerald btn-lg px-4" id="hero-btn-start">
+            <i class="fa-solid fa-camera me-2"></i> Analizar hoja ahora
+          </a>
+          <a href="{% url 'core:model_info' %}" class="btn btn-outline-secondary btn-lg px-4" id="hero-btn-model">
+            <i class="fa-solid fa-circle-info me-2"></i> Arquitectura del modelo
+          </a>
+        </div>
+
+        <div class="d-flex align-items-center gap-4 text-muted small pt-2">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-check text-success"></i>
+            <span>8 clases reconocidas</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-check text-success"></i>
+            <span>Inferencia en &lt; 150 ms</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-check text-success"></i>
+            <span>Reportes PDF descargables</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="custom-card p-4 text-center position-relative overflow-hidden" style="border: 2px solid #a7f3d0; background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);">
+          <div class="mb-3">
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill fw-semibold">
+              <i class="fa-solid fa-shield-halved me-1"></i> Tesis Universitaria
+            </span>
+          </div>
+          <h5 class="fw-bold text-dark mb-2">EfficientNet-B0 + SVM</h5>
+          <p class="text-muted small mb-3">
+            Modelo ganador seleccionado rigurosamente mediante validación cruzada estratificada (10-Fold CV) sin usar el conjunto de test para la preselección.
+          </p>
+          
+          <div class="row g-2 text-start mb-3">
+            <div class="col-6">
+              <div class="p-2 rounded bg-white border">
+                <div class="text-muted" style="font-size: 0.72rem;">VECTOR EMBEDDING</div>
+                <div class="fw-bold text-dark font-monospace">1,280 dims</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-2 rounded bg-white border">
+                <div class="text-muted" style="font-size: 0.72rem;">RESOLUCIÓN ENTRADA</div>
+                <div class="fw-bold text-dark font-monospace">224 &times; 224 px</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-2 rounded bg-white border">
+                <div class="text-muted" style="font-size: 0.72rem;">F1-MACRO CV-10</div>
+                <div class="fw-bold text-success font-monospace">98.18 %</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-2 rounded bg-white border">
+                <div class="text-muted" style="font-size: 0.72rem;">ESTADO ACTUAL</div>
+                <div class="fw-bold text-dark">
+                  {% if IS_MODEL_READY %}
+                    <span class="text-success"><i class="fa-solid fa-circle-dot"></i> Activo</span>
+                  {% else %}
+                    <span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> Pendiente</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a href="{% url 'classifier:analyze' %}" class="btn btn-outline-emerald w-100 btn-sm">
+            Probar clasificador en vivo <i class="fa-solid fa-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección ¿Cómo Funciona? -->
+<section class="py-5 bg-white border-bottom">
+  <div class="container">
+    <div class="text-center max-w-700 mx-auto mb-5">
+      <span class="text-success fw-bold text-uppercase" style="font-size: 0.8rem; letter-spacing: 0.1em;">Flujo de Diagnóstico</span>
+      <h2 class="fw-bold text-dark mt-1">¿Cómo funciona MangoLeaf-AI?</h2>
+      <p class="text-muted">Proceso optimizado en tres fases para una clasificación rápida, consistente y reproducible.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="custom-card h-100 p-4 text-center">
+          <div class="brand-icon-box mx-auto mb-3" style="width: 52px; height: 52px; font-size: 1.4rem;">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+          </div>
+          <span class="badge bg-light text-muted border px-2 py-1 mb-2">Paso 01</span>
+          <h5 class="fw-bold text-dark">Carga de Fotografía</h5>
+          <p class="text-muted small mb-0">
+            Sube o arrastra una imagen de hoja de mango en formato JPG o PNG. El sistema valida su autenticidad y ajusta su orientación EXIF automáticamente.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="custom-card h-100 p-4 text-center">
+          <div class="brand-icon-box mx-auto mb-3" style="width: 52px; height: 52px; font-size: 1.4rem;">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <span class="badge bg-light text-muted border px-2 py-1 mb-2">Paso 02</span>
+          <h5 class="fw-bold text-dark">Inferencia Híbrida</h5>
+          <p class="text-muted small mb-0">
+            EfficientNet-B0 extrae un vector de 1,280 características visuales profundas y el pipeline SVM (StandardScaler + SVC) estima la probabilidad de las 8 categorías.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="custom-card h-100 p-4 text-center">
+          <div class="brand-icon-box mx-auto mb-3" style="width: 52px; height: 52px; font-size: 1.4rem;">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
+          <span class="badge bg-light text-muted border px-2 py-1 mb-2">Paso 03</span>
+          <h5 class="fw-bold text-dark">Diagnóstico y Reporte</h5>
+          <p class="text-muted small mb-0">
+            Visualiza el gráfico de distribución de puntuaciones, recomendaciones de manejo agronómico y descarga un reporte técnico formal en formato PDF.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección de Inteligencia Artificial en Agricultura -->
+<section class="py-5" style="background: #f8fafc;">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="text-success fw-bold text-uppercase" style="font-size: 0.8rem; letter-spacing: 0.1em;">Contexto Fitosanitario</span>
+        <h2 class="fw-bold text-dark mt-1 mb-3">La importancia del diagnóstico foliar oportuno en el cultivo de mango</h2>
+        <p class="text-muted mb-3">
+          El mango (<i>Mangifera indica L.</i>) es uno de los frutales tropicales de mayor relevancia económica a nivel mundial y de exportación en diversas regiones agroindustriales. Sin embargo, su productividad se ve constantemente amenazada por patologías fúngicas, bacteriosis y ataques de plagas foliares.
+        </p>
+        <p class="text-muted mb-4">
+          La inspección visual tradicional requiere especialistas en campo y suele ser lenta o subjetiva. MangoLeaf-AI combina la capacidad de representación jerárquica de <b>EfficientNet-B0</b> con la robustez y capacidad de generalización en márgenes de <b>Support Vector Machines (SVM)</b>, brindando una herramienta de asistencia tecnológica objetiva.
+        </p>
+        
+        <div class="p-3 rounded bg-white border border-success-subtle">
+          <div class="d-flex align-items-center gap-3">
+            <i class="fa-solid fa-quote-left fs-3 text-emerald opacity-50"></i>
+            <div class="small fst-italic text-dark">
+              "El modelo híbrido alcanzó un F1-macro de 98.18% en validación cruzada, superando las combinaciones con ResNet50 y MobileNetV2."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="custom-card p-4">
+          <h5 class="fw-bold text-dark mb-3">
+            <i class="fa-solid fa-layer-group text-success me-2"></i> Las 8 Categorías Evaluadas
+          </h5>
+          <div class="row g-2">
+            {% for en_name, data in all_categories %}
+              <div class="col-sm-6">
+                <div class="p-2 border rounded bg-light d-flex align-items-center justify-content-between">
+                  <div>
+                    <div class="fw-semibold text-dark small">{{ data.nombre_es }}</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">{{ en_name }}</div>
+                  </div>
+                  <span class="badge {% if en_name == 'Healthy' %}bg-success{% elif data.gravedad == 'Alta' or data.gravedad == 'Muy Alta' %}bg-danger{% else %}bg-warning text-dark{% endif %}" style="font-size: 0.68rem;">
+                    {% if en_name == 'Healthy' %}Sana{% else %}{{ data.gravedad }}{% endif %}
+                  </span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          
+          <div class="mt-4 pt-3 border-top text-center">
+            <a href="{% url 'core:model_info' %}" class="text-success text-decoration-none fw-semibold small">
+              Ver detalles metodológicos de la investigación <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Banner CTA Final -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--forest-deep) 0%, var(--forest-dark) 100%);">
+  <div class="container text-center text-white py-3">
+    <h2 class="fw-bold mb-2">Comienza a analizar hojas de mango</h2>
+    <p class="text-light opacity-75 max-w-600 mx-auto mb-4">
+      Prueba el clasificador con tus propias imágenes o utiliza las muestras de control incluidas en el estudio.
+    </p>
+    <a href="{% url 'classifier:analyze' %}" class="btn btn-emerald btn-lg px-5 shadow-lg" id="cta-bottom-analyze">
+      <i class="fa-solid fa-microscope me-2"></i> Ir al Clasificador
+    </a>
+  </div>
+</section>
+{% endblock %}

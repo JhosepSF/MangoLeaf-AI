@@ -1,0 +1,13 @@
+# Django y extensiones
+django>=5.1.0,<6.2.0
+python-dotenv>=1.0.0
+
+# Inteligencia Artificial y Visión Computacional
+tensorflow>=2.16.0,<=2.21.0
+scikit-learn==1.6.1
+joblib>=1.4.0,<=1.6.0
+numpy>=1.26.0,<2.6.0
+pillow>=10.0.0,<=13.0.0
+
+# Generación de reportes PDF académicos
+reportlab>=4.0.0,<=5.2.0

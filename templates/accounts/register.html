@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Registro de Usuario | MangoLeaf-AI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+      <div class="custom-card p-4 p-md-5">
+        <div class="text-center mb-4">
+          <div class="brand-icon-box mx-auto mb-3" style="width: 48px; height: 48px; font-size: 1.3rem;">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+          <h3 class="fw-bold text-dark">Crear Cuenta</h3>
+          <p class="text-muted small">Regístrate para mantener tu propio historial de diagnósticos foliares y descargar reportes.</p>
+        </div>
+
+        {% if form.errors %}
+          <div class="alert alert-danger small p-3 mb-3">
+            <ul class="mb-0 ps-3">
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+              {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'accounts:register' %}">
+          {% csrf_token %}
+
+          <div class="row g-2 mb-3">
+            <div class="col-sm-6">
+              <label for="id_first_name" class="form-label small fw-semibold text-dark">Nombres</label>
+              <input type="text" name="first_name" id="id_first_name" class="form-control" placeholder="Ej. Juan" required value="{{ form.first_name.value|default:'' }}">
+            </div>
+            <div class="col-sm-6">
+              <label for="id_last_name" class="form-label small fw-semibold text-dark">Apellidos</label>
+              <input type="text" name="last_name" id="id_last_name" class="form-control" placeholder="Ej. Pérez" value="{{ form.last_name.value|default:'' }}">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_username" class="form-label small fw-semibold text-dark">Nombre de usuario</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted">@</span>
+              <input type="text" name="username" id="id_username" class="form-control" placeholder="usuario_agronomo" required value="{{ form.username.value|default:'' }}">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_email" class="form-label small fw-semibold text-dark">Correo Electrónico</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-envelope"></i></span>
+              <input type="email" name="email" id="id_email" class="form-control" placeholder="correo@ejemplo.com" required value="{{ form.email.value|default:'' }}">
+            </div>
+          </div>
+
+          <div class="row g-2 mb-4">
+            <div class="col-sm-6">
+              <label for="id_password" class="form-label small fw-semibold text-dark">Contraseña</label>
+              <input type="password" name="password" id="id_password" class="form-control" placeholder="Mínimo 6 caracteres" required>
+            </div>
+            <div class="col-sm-6">
+              <label for="id_password_confirm" class="form-label small fw-semibold text-dark">Confirmar Contraseña</label>
+              <input type="password" name="password_confirm" id="id_password_confirm" class="form-control" placeholder="Repita la contraseña" required>
+            </div>
+          </div>
+
+          <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-emerald btn-lg py-2 fw-semibold" id="btn-register-submit">
+              Completar Registro
+            </button>
+          </div>
+
+          <div class="text-center small text-muted">
+            ¿Ya tienes una cuenta? <a href="{% url 'accounts:login' %}" class="text-success fw-semibold text-decoration-none">Inicia sesión</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
